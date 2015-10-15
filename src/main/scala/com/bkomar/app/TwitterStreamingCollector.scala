@@ -25,29 +25,19 @@ object TwitterStreamingCollector {
 
     val ssc = new StreamingContext(sparkConf, Seconds(batchInterval))
 
-    Utils.getTwitterOAuth
+    Utils.setUpTwitterOAuth
 
     val stream = TwitterUtils.createStream(ssc, None)
-
     val hashTags = stream.flatMap(status => status.getText.split(" ").filter(_.startsWith("#")))
 
-
-        val outputDir = new File(outputPath.toString)
-        if (outputDir.exists()) {
-          System.err.println("ERROR - %s already exists: delete or specify another directory".format(
-            outputPath))
-          System.exit(1)
-        }
-        outputDir.mkdirs()
-
-        hashTags.foreachRDD((rdd, time) => {
-          if (rdd.count() > 0) {
-            println("!!!!!!!!!Received items" + rdd.count())
-            rdd
-              .repartition(partitionNum)
-              .saveAsTextFile(outputPath + "/tweets_" + time.milliseconds.toString)
-          }
-        })
+    hashTags.foreachRDD((rdd, time) => {
+      if (rdd.count() > 0) {
+        println("!!!!!!!!!Received items" + rdd.count())
+        rdd
+          .repartition(partitionNum)
+          .saveAsTextFile(outputPath + "/tweets_" + time.milliseconds.toString)
+      }
+    })
 
     ssc.start()
     ssc.awaitTermination()

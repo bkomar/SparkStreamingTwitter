@@ -1,28 +1,24 @@
 package com.bkomar.utils
 
 import java.util.Properties
-import twitter4j.auth.OAuthAuthorization
-import twitter4j.conf.ConfigurationBuilder
-
-
 import scala.io.Source
 
 
 object Utils {
 
   /**
-   * Set up Twitter oAuth connection
-   * @return OAuthAuthorization
+   * Set up Twitter oAuth connection properties
    */
-  def getTwitterOAuth() = {
-    val props = readProperties("system")
-
-    System.setProperty("twitter4j.oauth.consumerKey", props.getProperty("twitter.oauth.consumer.key"))
-    System.setProperty("twitter4j.oauth.consumerSecret", props.getProperty("twitter.oauth.consumer.secret"))
-    System.setProperty("twitter4j.oauth.accessToken", props.getProperty("twitter.oauth.access.token"))
-    System.setProperty("twitter4j.oauth.accessTokenSecret", props.getProperty("twitter.oauth.access.token.secret"))
-
-//    return Some(new OAuthAuthorization(new ConfigurationBuilder().build()))
+  def setUpTwitterOAuth() = {
+    val props = readProperties("app.properties")
+    System.setProperty("twitter4j.oauth.consumerKey",
+      props.getProperty("twitter.oauth.consumer.key"))
+    System.setProperty("twitter4j.oauth.consumerSecret",
+      props.getProperty("twitter.oauth.consumer.secret"))
+    System.setProperty("twitter4j.oauth.accessToken",
+      props.getProperty("twitter.oauth.access.token"))
+    System.setProperty("twitter4j.oauth.accessTokenSecret",
+      props.getProperty("twitter.oauth.access.token.secret"))
   }
 
   /**
@@ -31,7 +27,7 @@ object Utils {
    * @return properties
    */
   def readProperties(fileName: String) : Properties = {
-    val url = getClass.getResource("/app.properties")
+    val url = getClass.getResource("/".concat(fileName))
     val properties = new Properties()
     if (url != null) {
       try {
