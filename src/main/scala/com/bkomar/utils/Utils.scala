@@ -6,6 +6,8 @@ import scala.io.Source
 
 object Utils {
 
+  def hashTagSeparator = "|"
+
   /**
    * Set up Twitter oAuth connection properties
    */
@@ -19,6 +21,9 @@ object Utils {
       props.getProperty("twitter.oauth.access.token"))
     System.setProperty("twitter4j.oauth.accessTokenSecret",
       props.getProperty("twitter.oauth.access.token.secret"))
+
+//    System.setProperty("twitter4j.http.connectionTimeout", "50000")
+//    System.setProperty("twitter4j.http.readTimeout", "220000")
   }
 
   /**
